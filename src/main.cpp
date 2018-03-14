@@ -35,7 +35,7 @@ int main()
   PID pid;
   // TODO: Initialize the pid variable.
     double init_Kp = -0.225;
-    double init_Ki = 0.0;
+    double init_Ki = -0.0001;
     double init_Kd = -3.0;
     pid.Init(init_Kp, init_Ki, init_Kd);
 
@@ -62,9 +62,17 @@ int main()
           * another PID controller to control the speed!
           */
 
+          static double prev_steer = 0;
           pid.UpdateError(cte);
           steer_value = pid.TotalError();
-          // DEBUG
+          steer_value = 0.65*prev_steer+ 0.35*steer_value;
+          if(steer_value>1.75){
+              steer_value =1.75;
+          }
+          else if (steer_value<-1.75){
+              steer_value =-1.75;
+          }
+            // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
 
           json msgJson;
